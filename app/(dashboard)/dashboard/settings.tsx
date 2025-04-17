@@ -8,6 +8,7 @@ import { useActionState } from 'react';
 import { TeamDataWithMembers, User } from '@/lib/db/schema';
 import { removeTeamMember } from '@/app/(login)/actions';
 import { InviteTeamMember } from './invite-team';
+import Link from 'next/link';
 
 type ActionState = {
   error?: string;
@@ -48,7 +49,11 @@ export function Settings({ teamData }: { teamData: TeamDataWithMembers }) {
               </div>
               <form action={customerPortalAction}>
                 <Button type="submit" variant="outline">
-                  Manage Subscription
+                  <Link
+                    href={`${process.env.NEXT_PUBLIC_STRIPE_CUSTOMER_PORTAL_URL}?prefilled_email=${encodeURIComponent(teamData.teamMembers[0].user.email)}`}
+                  >
+                    Gerenciar assinatura
+                  </Link>
                 </Button>
               </form>
             </div>

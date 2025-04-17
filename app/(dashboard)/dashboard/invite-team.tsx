@@ -14,7 +14,7 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
 import { use, useActionState } from 'react';
 import { inviteTeamMember } from '@/app/(login)/actions';
-import { useUser } from '@/lib/auth';
+import { useUser } from '@/lib/auth/';
 
 type ActionState = {
   error?: string;
@@ -24,7 +24,7 @@ type ActionState = {
 export function InviteTeamMember() {
   const { userPromise } = useUser();
   const user = use(userPromise);
-  const isOwner = user?.role === 'owner';
+  const isOwner = user?.role === 'Owner';
   const [inviteState, inviteAction, isInvitePending] = useActionState<
     ActionState,
     FormData
@@ -63,8 +63,8 @@ export function InviteTeamMember() {
                 <Label htmlFor="member">Member</Label>
               </div>
               <div className="flex items-center space-x-2 mt-2">
-                <RadioGroupItem value="owner" id="owner" />
-                <Label htmlFor="owner">Owner</Label>
+                <RadioGroupItem value="Owner" id="Owner" />
+                <Label htmlFor="Owner">Owner</Label>
               </div>
             </RadioGroup>
           </div>
@@ -96,7 +96,7 @@ export function InviteTeamMember() {
       {!isOwner && (
         <CardFooter>
           <p className="text-sm text-muted-foreground">
-            You must be a team owner to invite new members.
+            You must be a team Owner to invite new members.
           </p>
         </CardFooter>
       )}

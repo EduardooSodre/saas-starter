@@ -4,6 +4,8 @@ import { getStripePrices, getStripeProducts } from '@/lib/payments/stripe';
 import { notFound } from 'next/navigation';
 import { SubmitButton } from '@/components/ui/submit-button';
 import { getUserSubscription } from '@/lib/subscription';
+import { Button } from '@/components/ui/button';
+import Link from 'next/link';
 
 export const dynamic = 'force-dynamic';
 
@@ -24,12 +26,12 @@ export default async function MeuPlanoPage() {
     const basePrice = prices.find((price) => price.productId === basePlan?.id);
     const plusPrice = prices.find((price) => price.productId === plusPlan?.id);
 
-    const isPlus = user.plan === 'plus';
+    const isPlus = user.plan === 'Plus';
     const currentPlan = isPlus ? plusPlan : basePlan;
     const currentPrice = isPlus ? plusPrice : basePrice;
 
     const nextPriceId = isPlus ? basePrice?.id : plusPrice?.id;
-    const nextPlanName = isPlus ? 'Base' : 'Plus';
+    const nextPlanName = isPlus ? 'Free' : 'Plus';
 
     const subscription = await getUserSubscription();
 
@@ -74,9 +76,13 @@ export default async function MeuPlanoPage() {
                 {nextPriceId && (
                     <form action="/api/checkout">
                         <input type="hidden" name="priceId" value={nextPriceId} />
-                        <SubmitButton>
-                            {isPlus ? 'Fazer downgrade para Base' : 'Fazer upgrade para Plus'}
-                        </SubmitButton>
+                        <Button type="submit" variant="outline">
+                            <Link
+                                href={`${process.env.NEXT_PUBLIC_STRIPE_CUSTOMER_PORTAL_URL}?prefilled_email=${encodeURIComponent(user.email)}`}
+                            >
+                                Gerenciar assinatura
+                            </Link>
+                        </Button>
                     </form>
                 )}
             </div>

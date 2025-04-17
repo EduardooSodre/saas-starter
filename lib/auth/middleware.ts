@@ -14,19 +14,19 @@ export async function middleware(req: NextRequest) {
   }
 
   // Tela só admin
-  if (path.startsWith("/admin") && user.role !== "admin") {
+  if (path.startsWith("/admin") && user.role !== "Owner") {
     return new NextResponse("Acesso negado: somente admins", { status: 403 });
   }
 
   // Tela só plano plus
-  if (path.startsWith("/plus-content") && user.plan !== "plus") {
+  if (path.startsWith("/plus-content") && user.plan !== "Plus") {
     return new NextResponse("Acesso negado: plano Plus necessário", {
       status: 403,
     });
   }
 
   // Tela só para free
-  if (path.startsWith("/free-only") && user.plan !== "free") {
+  if (path.startsWith("/free-only") && user.plan !== "Free") {
     return new NextResponse("Acesso negado: apenas usuários free", {
       status: 403,
     });

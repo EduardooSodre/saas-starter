@@ -59,10 +59,11 @@ export async function setSession(user: NewUser) {
 }
 
 export type User = {
+  [x: string]: string | number | boolean;
   id: string;
   name: string;
-  role: "user" | "admin";
-  plan: "free" | "plus";
+  role: "Member" | "Owner";
+  plan: "Free" | "Plus";
 };
 
 export async function getUserSession(): Promise<User | null> {
@@ -70,7 +71,7 @@ export async function getUserSession(): Promise<User | null> {
   return {
     id: "123",
     name: "João",
-    role: "admin", // mude para "user" para testar
-    plan: "plus", // mude para "free" para testar
+    role: "Member", // mude para "member" para testar
+    plan: "Plus", // mude para "free" para testar
   };
 }

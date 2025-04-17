@@ -4,7 +4,7 @@ import { notFound } from 'next/navigation';
 export default async function AdminOnlyPage() {
     const user = await getUser();
 
-    if (!user || user.role !== 'admin') {
+    if (!user || user.role !== 'owner') {
         notFound(); // Redireciona para 404 se não for admin
     }
 

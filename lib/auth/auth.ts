@@ -1,14 +1,16 @@
 export type User = {
   id: string;
   email: string;
-  role: "user" | "admin";
+  role: "Member" | "Owner";
+  plan: "Free" | "Base" | "Plus" | null;
 };
 
 export async function getUser(): Promise<User | null> {
   // Mock estático para testes
   return {
     id: "1",
-    email: "plus@email.com", // troque aqui para testar base ou free
-    role: "user",
+    email: "free@email.com", // troque aqui para testar base ou free
+    role: "Member",
+    plan: "Free",
   };
 }

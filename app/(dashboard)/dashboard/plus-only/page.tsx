@@ -1,11 +1,13 @@
-import { getUserSubscription } from '@/lib/subscription';
-import { notFound } from 'next/navigation';
+export const dynamic = "force-dynamic";
+
+import { getUserSubscription } from "@/lib/subscription";
+import { notFound } from "next/navigation";
 
 export default async function PlusOnlyPage() {
     const subscription = await getUserSubscription();
 
-    if (subscription?.plan !== 'Plus') {
-        notFound(); // ou redirect('/pricing')
+    if (subscription?.plan !== "Plus") {
+        notFound(); // ou use redirect("/pricing")
     }
 
     return (

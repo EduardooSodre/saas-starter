@@ -1,13 +1,12 @@
-// app/dashboard/meu-plano/page.tsx
+export const dynamic = 'force-dynamic';
+
 import { getUserSession } from '@/lib/auth/session';
 import { getStripePrices, getStripeProducts } from '@/lib/payments/stripe';
 import { notFound } from 'next/navigation';
-import { SubmitButton } from '@/components/ui/submit-button';
 import { getUserSubscription } from '@/lib/subscription';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 
-export const dynamic = 'force-dynamic';
 
 
 export default async function MeuPlanoPage() {

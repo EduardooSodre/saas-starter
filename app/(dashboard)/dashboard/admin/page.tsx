@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { getUser } from '@/lib/auth/auth';
 import { notFound } from 'next/navigation';
 

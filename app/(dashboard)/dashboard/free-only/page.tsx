@@ -1,7 +1,8 @@
+export const dynamic = "force-dynamic";
+
 import { getUserSubscription } from '@/lib/subscription';
 import { notFound } from 'next/navigation';
 
-export const dynamic = "force-dynamic";
 
 
 export default async function FreeOnlyPage() {

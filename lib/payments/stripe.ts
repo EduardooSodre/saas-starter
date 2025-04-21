@@ -92,19 +92,6 @@ export async function createCustomerPortalSession(team: Team) {
           cancellation_reason: {
             enabled: true,
             options: [
-<<<<<<< HEAD
-              'too_expensive',
-              'missing_features',
-              'switched_service',
-              'unused',
-              'other',
-            ],
-          },
-        },
-        payment_method_update: {
-          enabled: true,
-        },
-=======
               "too_expensive",
               "missing_features",
               "switched_service",
@@ -113,7 +100,9 @@ export async function createCustomerPortalSession(team: Team) {
             ],
           },
         },
->>>>>>> backup-detached
+        payment_method_update: {
+          enabled: true,
+        },
       },
     });
   }

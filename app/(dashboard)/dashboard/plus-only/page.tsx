@@ -6,15 +6,13 @@ export default async function PlusOnlyPage() {
     if (!user) return notFound();
 
     const team = await getTeamForUser(user.id);
-    if (!team || team.planName !== 'Plus') {
-        throw new Error('Acesso restrito ao plano Plus');
-    }
+    if (!team || team.planName !== 'Plus') return notFound();
 
     return (
         <div className="p-6">
-            <h1 className="text-3xl font-bold text-orange-600">Área Exclusiva do Plano Plus</h1>
-            <p className="mt-4 text-gray-700">
-                Você tem acesso a funcionalidades avançadas e suporte premium.
+            <h1 className="text-2xl font-bold">Página exclusiva do Plano Plus</h1>
+            <p className="mt-2 text-gray-600">
+                Bem-vindo! Esta página é acessível apenas para usuários do plano Plus.
             </p>
         </div>
     );

@@ -1,73 +1,107 @@
 'use client';
 
-import { useState } from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { Button } from '@/components/ui/button';
-import { Users, Settings, Shield, Activity, Menu } from 'lucide-react';
+import { use, Suspense } from 'react';
+import { useUser } from '@/lib/auth';
+import {
+  Users,
+  Settings,
+  Shield,
+  Activity,
+  BadgeDollarSign,
+  Crown,
+  LockKeyhole,
+  Star,
+  Gem,
+  Layers,
+} from 'lucide-react';
 
-export default function DashboardLayout({
-  children
+function SidebarLink({
+  href,
+  icon: Icon,
+  children,
+  highlight = false
+}: {
+  href: string;
+  icon: React.ElementType;
+  children: React.ReactNode;
+  highlight?: boolean;
+}) {
+  return (
+    <Link
+      href={href}
+      className={`flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground ${highlight
+        ? 'bg-orange-100 border border-orange-300 text-orange-900'
+        : 'text-muted-foreground'
+        }`}
+    >
+      <Icon className="h-4 w-4" />
+      {children}
+    </Link>
+  );
+}
+
+function Sidebar() {
+  const { userPromise } = useUser();
+  const user = use(userPromise);
+
+  const role = user?.role;
+  const plan = user?.team?.planName as 'Free' | 'Base' | 'Plus';
+
+  const planRoutes: Record<
+    'Free' | 'Base' | 'Plus',
+    { href: string; icon: React.ElementType }
+  > = {
+    Free: {
+      href: '/dashboard/free-only',
+      icon: LockKeyhole,
+    },
+    Base: {
+      href: '/dashboard/base-only',
+      icon: Star,
+    },
+    Plus: {
+      href: '/dashboard/plus-only',
+      icon: Gem,
+    },
+  };
+
+  const pagePlan = plan ? planRoutes[plan] : null;
+
+  return (
+    <div className="w-64 border-r p-4 space-y-1">
+      <SidebarLink href="/dashboard" icon={Users}>Team</SidebarLink>
+      <SidebarLink href="/dashboard/general" icon={Settings}>General</SidebarLink>
+      <SidebarLink href="/dashboard/activity" icon={Activity}>Activity</SidebarLink>
+      <SidebarLink href="/dashboard/security" icon={Shield}>Security</SidebarLink>
+      <SidebarLink href="/dashboard/plan-details" icon={BadgeDollarSign}>Plan Details</SidebarLink>
+
+      {role === 'owner' && (
+        <SidebarLink href="/dashboard/admin-only" icon={Crown}>Admin Only</SidebarLink>
+      )}
+
+      {/* Página exclusiva conforme o plano atual */}
+      {pagePlan && (
+        <SidebarLink href={pagePlan.href} icon={pagePlan.icon}>
+          Page Plan
+        </SidebarLink>
+      )}
+    </div>
+  );
+}
+
+
+export default function SettingsLayout({
+  children,
 }: {
   children: React.ReactNode;
 }) {
-  const pathname = usePathname();
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-
-  const navItems = [
-    { href: '/dashboard', icon: Users, label: 'Team' },
-    { href: '/dashboard/general', icon: Settings, label: 'General' },
-    { href: '/dashboard/activity', icon: Activity, label: 'Activity' },
-    { href: '/dashboard/security', icon: Shield, label: 'Security' }
-  ];
-
   return (
-    <div className="flex flex-col min-h-[calc(100dvh-68px)] max-w-7xl mx-auto w-full">
-      {/* Mobile header */}
-      <div className="lg:hidden flex items-center justify-between bg-white border-b border-gray-200 p-4">
-        <div className="flex items-center">
-          <span className="font-medium">Settings</span>
-        </div>
-        <Button
-          className="-mr-3"
-          variant="ghost"
-          onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-        >
-          <Menu className="h-6 w-6" />
-          <span className="sr-only">Toggle sidebar</span>
-        </Button>
-      </div>
-
-      <div className="flex flex-1 overflow-hidden h-full">
-        {/* Sidebar */}
-        <aside
-          className={`w-64 bg-white lg:bg-gray-50 border-r border-gray-200 lg:block ${
-            isSidebarOpen ? 'block' : 'hidden'
-          } lg:relative absolute inset-y-0 left-0 z-40 transform transition-transform duration-300 ease-in-out lg:translate-x-0 ${
-            isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
-          }`}
-        >
-          <nav className="h-full overflow-y-auto p-4">
-            {navItems.map((item) => (
-              <Link key={item.href} href={item.href} passHref>
-                <Button
-                  variant={pathname === item.href ? 'secondary' : 'ghost'}
-                  className={`shadow-none my-1 w-full justify-start ${
-                    pathname === item.href ? 'bg-gray-100' : ''
-                  }`}
-                  onClick={() => setIsSidebarOpen(false)}
-                >
-                  <item.icon className="h-4 w-4" />
-                  {item.label}
-                </Button>
-              </Link>
-            ))}
-          </nav>
-        </aside>
-
-        {/* Main content */}
-        <main className="flex-1 overflow-y-auto p-0 lg:p-4">{children}</main>
-      </div>
+    <div className="flex min-h-screen">
+      <Suspense fallback={<div className="w-64" />}>
+        <Sidebar />
+      </Suspense>
+      <main className="flex-1 p-6">{children}</main>
     </div>
   );
 }

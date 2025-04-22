@@ -1,17 +1,23 @@
 'use client';
 
 import { createContext, useContext, ReactNode } from 'react';
-import { User } from '@/lib/db/schema';
+import { User, Team } from '@/lib/db/schema';
+
+type UserWithTeam = User & {
+  team?: {
+    planName: string | null;
+  };
+};
 
 type UserContextType = {
-  userPromise: Promise<User | null>;
+  userPromise: Promise<UserWithTeam | null>;
 };
 
 const UserContext = createContext<UserContextType | null>(null);
 
 export function useUser(): UserContextType {
-  let context = useContext(UserContext);
-  if (context === null) {
+  const context = useContext(UserContext);
+  if (!context) {
     throw new Error('useUser must be used within a UserProvider');
   }
   return context;
@@ -22,7 +28,7 @@ export function UserProvider({
   userPromise
 }: {
   children: ReactNode;
-  userPromise: Promise<User | null>;
+  userPromise: Promise<UserWithTeam | null>;
 }) {
   return (
     <UserContext.Provider value={{ userPromise }}>

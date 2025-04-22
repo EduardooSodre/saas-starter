@@ -46,13 +46,11 @@ async function seed() {
 
   const [user] = await db
     .insert(users)
-    .values([
-      {
-        email: email,
-        passwordHash: passwordHash,
-        role: "member",
-      },
-    ])
+    .values({
+      email,
+      passwordHash,
+      role: "member", // não é "owner", será member por padrão
+    })
     .returning();
 
   console.log("Initial user created.");
@@ -61,13 +59,15 @@ async function seed() {
     .insert(teams)
     .values({
       name: "Test Team",
+      planName: "Free", // plano inicial
+      subscriptionStatus: "inactive", // sem assinatura
     })
     .returning();
 
   await db.insert(teamMembers).values({
     teamId: team.id,
     userId: user.id,
-    role: "member",
+    role: "member", // vinculado como membro
   });
 
   await createStripeProducts();
